@@ -1,0 +1,26 @@
+{
+  "scripts": {
+    "db:init": "mysql -uroot < db/init.sql",
+    "test": "jest",
+    "e2e": "cypress run",
+    "lint": "eslint api pages e2e server.js",
+    "dev": "node server",
+    "build": "next build",
+    "start": "NODE_ENV=production node server.js"
+  },
+  "dependencies": {
+    "express": "^4.16.3",
+    "mysql": "^2.15.0",
+    "next": "^6.0.3",
+    "react": "^16.4.0",
+    "react-dom": "^16.4.0"
+  },
+  "devDependencies": {
+    "eslint": "^4.9.0",
+    "eslint-config-airbnb": "16.1.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-react": "^7.4.0",
+    "jest": "^23.1.0"
+  }
+}
