@@ -4,6 +4,7 @@
     "jest": true
   },
   "globals": {
+    "shallow": true,
     "cy": true
   },
   "rules": {

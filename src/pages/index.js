@@ -1,3 +1,4 @@
+import React from 'react';
 import { arrayOf, object } from 'prop-types';
 import fetch from 'isomorphic-fetch';
 import Contacts from '../components/Contacts';
