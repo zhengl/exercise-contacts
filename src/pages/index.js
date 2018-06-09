@@ -4,12 +4,22 @@ import fetch from 'isomorphic-fetch';
 import AppBar from '../components/AppBar';
 import Contacts from '../components/Contacts';
 
-const Wrapper = styled.div``;
+const Wrapper = styled.div`
+  padding-top: 72px;
+`;
+
+const Main = styled.div`
+  max-width: 960px;
+  margin: 0 auto;
+  box-shadow: 2px 4px 10px rgba(0, 0, 0, .2);
+`;
 
 const App = ({ contacts }) => (
   <Wrapper>
-    <AppBar />
-    <Contacts contacts={contacts} />
+    <AppBar title="Contacts" />
+    <Main>
+      <Contacts contacts={contacts} />
+    </Main>
   </Wrapper>
 );
 

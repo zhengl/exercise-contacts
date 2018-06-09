@@ -7,7 +7,7 @@ router.get('/contacts', async (req, res) => {
   const { limit, offset } = req.query;
 
   const contacts = await Contact.list({
-    limit: parseInt(limit, 10) || 10,
+    limit: parseInt(limit, 10) || 100,
     offset: parseInt(offset, 10) || 0,
   });
 

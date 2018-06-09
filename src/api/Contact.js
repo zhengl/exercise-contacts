@@ -1,19 +1,16 @@
 const { query } = require('../db');
 
 async function list(options) {
-  const sql = 'SELECT * FROM Contact LIMIT ? OFFSET ?';
+  const sql = `
+SELECT l.UserID as id, l.Title as title, l.Name as name, l.BirthDate as birthDate, COUNT(*) AS count, l.IsFavorite as isFavorite
+FROM Contact as l
+LEFT JOIN ContactDetail as d on d.UserID = l.UserID
+GROUP BY l.UserID
+LIMIT ? OFFSET ?;
+`;
 
   const { limit, offset } = options;
-  const rows = await query(sql, [limit, offset]);
-  return rows.map(({
-    UserID, Title, Name, BirthDate, IsFavorite,
-  }) => ({
-    id: UserID,
-    title: Title,
-    name: Name,
-    birthDate: BirthDate,
-    isFavorite: IsFavorite,
-  }));
+  return query(sql, [limit, offset]);
 }
 
 async function get(id) {
@@ -27,9 +24,8 @@ async function get(id) {
     if (result[type] === undefined) {
       result[type] = [];
     }
-    if (!result[type].includes(content)) {
-      result[type].push(content);
-    }
+
+    result[type].push(content);
   });
 
   return result;
