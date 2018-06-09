@@ -8,7 +8,7 @@ describe('Contacts', () => {
     title: 'test-title-1',
     birthDate: '1999-02-28T16:00:00.000Z',
     count: 5,
-    isFavorite: false,
+    isFavorite: 0,
   };
 
   it('should show the name', () => {
@@ -32,13 +32,13 @@ describe('Contacts', () => {
   });
 
   it('should show start icon if it is favorite', () => {
-    const wrapper = shallow(<Contact {...contact} isFavorite />);
+    const wrapper = shallow(<Contact {...contact} isFavorite={1} />);
     expect(wrapper.find(Star).length).toBe(1);
     expect(wrapper.find(StarBorder).length).toBe(0);
   });
 
   it('should show star border icon if it is not favorite', () => {
-    const wrapper = shallow(<Contact {...contact} isFavorite={false} />);
+    const wrapper = shallow(<Contact {...contact} isFavorite={0} />);
     expect(wrapper.find(Star).length).toBe(0);
     expect(wrapper.find(StarBorder).length).toBe(1);
   });

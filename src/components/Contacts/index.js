@@ -1,6 +1,7 @@
-import { arrayOf, object } from 'prop-types';
+import { arrayOf, object, func } from 'prop-types';
 import styled from 'styled-components';
 import Contact from '../Contact';
+import Pagination from '../Pagination';
 
 const Wrapper = styled.div``;
 
@@ -31,7 +32,12 @@ const List = styled.ul`
   padding: 0;
 `;
 
-const Contacts = ({ contacts }) => (
+const Footer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;
+
+const Contacts = ({ contacts, onPrevious, onNext }) => (
   <Wrapper>
     <Header>
       <Label>Name</Label>
@@ -43,11 +49,16 @@ const Contacts = ({ contacts }) => (
     <List>
       { contacts.map(contact => <Contact key={contact.id} {...contact} />) }
     </List>
+    <Footer>
+      <Pagination onPrevious={onPrevious} onNext={onNext} />
+    </Footer>
   </Wrapper>
 );
 
 Contacts.propTypes = {
   contacts: arrayOf(object).isRequired,
+  onPrevious: func.isRequired,
+  onNext: func.isRequired,
 };
 
 export default Contacts;
