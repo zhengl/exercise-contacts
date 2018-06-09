@@ -3,7 +3,12 @@
   "env": {
     "jest": true
   },
+  "globals": {
+    "shallow": true,
+    "cy": true
+  },
   "rules": {
+    "import/no-extraneous-dependencies": 0,
     "react/react-in-jsx-scope": 0,
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }]
   }

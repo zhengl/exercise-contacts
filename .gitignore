@@ -1,3 +1,5 @@
+.DS_Store
+
 # Logs
 logs
 *.log
@@ -62,3 +64,6 @@ typings/
 
 # database files
 .sqlite
+
+# cypress output
+cypress

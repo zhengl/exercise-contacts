@@ -25,8 +25,8 @@ BEGIN
   DECLARE counter INT DEFAULT 1;
     DECLARE detailsCounter INT DEFAULT 1;
   DECLARE baseBirthDate DATETIME DEFAULT '1970-01-01';
-    
-    WHILE counter <= 10000 DO 
+
+    WHILE counter <= 10000 DO
     INSERT INTO Contact(UserID,Title,Name,BirthDate,IsFavorite)
         VALUES (
       counter,  -- ID
@@ -35,23 +35,28 @@ BEGIN
       DATE_ADD(baseBirthDate, INTERVAL (CAST(RAND() * 500 AS UNSIGNED) + 1) MONTH),
       case when counter % 3 = 0  THEN 1 ELSE 0 END -- favorite
     );
-        
-        -- add some contact details        
+
+        -- add some contact details
         SET detailsCounter = 1;
-    WHILE detailsCounter <= 5 DO 
+    WHILE detailsCounter <= 5 DO
       INSERT INTO ContactDetail(UserID, ContactDetailType, ContactDetailContent)
             VALUES (
-        counter,  
+        counter,
         CASE WHEN counter%2=0 THEN 'Phone' ELSE 'EMAIL' END,
                 CASE WHEN counter%2=0 THEN CONCAT('000 123 45',counter) ELSE CONCAT('user',counter,'@mail.com') END
-      );        
- 
+      );
+
       SET detailsCounter = detailsCounter + 1;
-        END WHILE;  
+        END WHILE;
     SET counter = counter + 1;
-  END WHILE;      
+  END WHILE;
 END//
 
 delimiter ;
 CALL DataFilling();
 
+-- incremental scripts to improve performance
+ALTER TABLE ContactDetail
+ADD CONSTRAINT FK_contact_detail_map
+FOREIGN KEY (UserID) REFERENCES Contact(UserID)
+ON DELETE CASCADE;
