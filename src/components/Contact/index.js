@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import moment from 'moment';
 import StarIcon from '@material-ui/icons/Star';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
-import { string, bool, number } from 'prop-types';
+import { string, number } from 'prop-types';
 
 export const Wrapper = styled.li`
   display: flex;
@@ -63,7 +63,7 @@ Contact.propTypes = {
   title: string.isRequired,
   birthDate: string.isRequired,
   count: number.isRequired,
-  isFavorite: bool.isRequired,
+  isFavorite: number.isRequired,
 };
 
 export default Contact;
