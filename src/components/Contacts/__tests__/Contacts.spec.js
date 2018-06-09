@@ -1,6 +1,7 @@
 import Contacts from '../';
+import Contact from '../../Contact';
 
-it('renders correctly', () => {
+describe('Contacts', () => {
   const contacts = [
     {
       id: 'test-id-1',
@@ -10,11 +11,15 @@ it('renders correctly', () => {
       id: 'test-id-2',
       name: 'test-name-2',
     },
-    {
-      id: 'test-id-3',
-      name: 'test-name-3',
-    },
   ];
-  const result = shallow(<Contacts contacts={contacts} />);
-  expect(result).toMatchSnapshot();
+  let wrapper;
+
+  beforeEach(() => {
+    wrapper = shallow(<Contacts contacts={contacts} />);
+  });
+
+  it('should a list of contact', () => {
+    expect(wrapper.find(Contact).length).toBe(contacts.length);
+  });
 });
+

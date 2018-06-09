@@ -1,9 +1,6 @@
-import React from 'react';
-import ShallowRenderer from 'react-test-renderer/shallow'; // eslint-disable-line import/no-extraneous-dependencies
+import { configure, shallow } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
 
-global.React = React;
-global.shallow = (element) => {
-  const renderer = new ShallowRenderer();
-  renderer.render(element);
-  return renderer.getRenderOutput();
-};
+configure({ adapter: new Adapter() });
+
+global.shallow = shallow;
