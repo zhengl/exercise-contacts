@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "db:init": "mysql -uroot < src/db/init.sql",
+    "db:init": "node src/db/init.js",
     "test": "NODE_ENV=test jest",
     "test:watch": "NODE_ENV=test jest --watch",
     "cypress:run": "cypress run",
@@ -9,7 +9,9 @@
     "lint": "eslint src e2e",
     "dev": "node src/server.js",
     "build": "next build src",
-    "start": "NODE_ENV=production node src/server.js"
+    "start": "NODE_ENV=production node src/server.js",
+    "heroku-prebuild": "npm run db:init",
+    "heroku-postbuild": "npm run build"
   },
   "dependencies": {
     "@material-ui/core": "^1.2.0",
