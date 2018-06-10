@@ -5,7 +5,7 @@ import Pagination from '../../Pagination';
 describe('Contacts', () => {
   const contacts = [
     {
-      id: 'test-id-1',
+      id: 1,
       name: 'test-name-1',
       title: 'test-title-1',
       birthDate: '1999-02-28T16:00:00.000Z',
@@ -13,7 +13,7 @@ describe('Contacts', () => {
       isFavorite: 0,
     },
     {
-      id: 'test-id-2',
+      id: 2,
       name: 'test-name-2',
       title: 'test-title-2',
       birthDate: '2000-02-28T16:00:00.000Z',

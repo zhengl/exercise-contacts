@@ -1,35 +1,19 @@
 import { Component } from 'react';
-import styled from 'styled-components';
 import { arrayOf, object } from 'prop-types';
-import fetchContacts from '../dao/Contacts';
-import AppBar from '../components/AppBar';
+import { fetchContacts } from '../dao/Contacts';
+import { addContacts, getContacts } from '../store';
+import Layout from '../components/Layout';
 import Contacts from '../components/Contacts';
 
 const PAGE_SIZE = 10;
 
-const Wrapper = styled.div`
-  padding-top: 72px;
-`;
-
-const Main = styled.div`
-  max-width: 960px;
-  margin: 0 auto;
-  box-shadow: 2px 4px 10px rgba(0, 0, 0, .2);
-`;
-
-const addContacts = (contacts, newContacts) => {
-  const existingContacts = { ...contacts };
-  newContacts.forEach((contact) => {
-    existingContacts[contact.id] = contact;
-  });
-
-  return existingContacts;
-};
-
-class App extends Component {
-  state = {
-    offset: 0,
-    contacts: addContacts({}, this.props.contacts),
+class List extends Component {
+  constructor(props) {
+    super(props);
+    addContacts(props.contacts);
+    this.state = {
+      offset: 0,
+    };
   }
 
   onPrevious = async () => {
@@ -39,9 +23,8 @@ class App extends Component {
       offset: newOffset,
       limit: PAGE_SIZE,
     });
-
+    addContacts(contacts);
     this.setState({
-      contacts: addContacts(this.state.contacts, contacts),
       offset: newOffset,
     });
   }
@@ -53,39 +36,36 @@ class App extends Component {
       offset: newOffset,
       limit: PAGE_SIZE,
     });
-
+    addContacts(contacts);
     this.setState({
-      contacts: addContacts(this.state.contacts, contacts),
       offset: newOffset,
     });
   }
 
   render() {
-    const { offset, contacts } = this.state;
+    const contacts = getContacts();
+    const { offset } = this.state;
     const slicedContacts = Object.keys(contacts)
       .slice(offset, offset + PAGE_SIZE)
       .map(id => contacts[id]);
 
     return (
-      <Wrapper>
-        <AppBar title="Contacts" />
-        <Main>
-          <Contacts contacts={slicedContacts} onPrevious={this.onPrevious} onNext={this.onNext} />
-        </Main>
-      </Wrapper>
+      <Layout>
+        <Contacts contacts={slicedContacts} onPrevious={this.onPrevious} onNext={this.onNext} />
+      </Layout>
     );
   }
 }
 
-App.getInitialProps = async () => {
+List.getInitialProps = async () => {
   const contacts = await fetchContacts({
     limit: PAGE_SIZE,
   });
   return { contacts };
 };
 
-App.propTypes = {
+List.propTypes = {
   contacts: arrayOf(object).isRequired,
 };
 
-export default App;
+export default List;

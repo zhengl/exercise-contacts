@@ -1,15 +1,21 @@
+import Link from 'next/link';
 import moment from 'moment';
 import Contact, { Name, Title, Age, Count, Star, StarBorder } from '../';
 
 describe('Contacts', () => {
   const contact = {
-    id: 'test-id-1',
+    id: 1,
     name: 'test-name-1',
     title: 'test-title-1',
     birthDate: '1999-02-28T16:00:00.000Z',
     count: 5,
     isFavorite: 0,
   };
+
+  it('should have a link to details', () => {
+    const wrapper = shallow(<Contact {...contact} />);
+    expect(wrapper.find(Link).props().href).toEqual({ pathname: '/details', query: { id: contact.id } });
+  });
 
   it('should show the name', () => {
     const wrapper = shallow(<Contact {...contact} />);

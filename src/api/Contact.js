@@ -4,7 +4,7 @@ async function list(options) {
   const sql = `
 SELECT l.UserID as id, l.Title as title, l.Name as name, l.BirthDate as birthDate, COUNT(*) AS count, l.IsFavorite as isFavorite
 FROM Contact as l
-LEFT JOIN ContactDetail as d on d.UserID = l.UserID
+LEFT JOIN ContactDetail as d ON d.UserID = l.UserID
 GROUP BY l.UserID
 LIMIT ? OFFSET ?;
 `;
@@ -14,18 +14,29 @@ LIMIT ? OFFSET ?;
 }
 
 async function get(id) {
-  const sql = 'SELECT * FROM ContactDetail WHERE UserID = ?';
+  const sql = `
+SELECT l.UserID as id, l.Title as title, l.Name as name, l.BirthDate as birthDate, l.IsFavorite as isFavorite, d.ContactDetailType as type, d.ContactDetailContent as content
+FROM Contact as l
+LEFT JOIN ContactDetail as d ON d.UserID = l.UserID
+WHERE l.UserID = ?;
+`;
 
   const rows = await query(sql, [id]);
-  const result = {};
-  rows.forEach(({ ContactDetailType, ContactDetailContent }) => {
-    const type = ContactDetailType.toLowerCase();
-    const content = ContactDetailContent;
-    if (result[type] === undefined) {
-      result[type] = [];
+
+  if (!rows.length) {
+    return {};
+  }
+
+  const result = { ...rows[0], types: {} };
+  delete result.type;
+  delete result.content;
+  rows.forEach(({ type, content }) => {
+    const normalizedType = type.toLowerCase();
+    if (!result.types[normalizedType]) {
+      result.types[normalizedType] = [];
     }
 
-    result[type].push(content);
+    result.types[normalizedType].push(content);
   });
 
   return result;
