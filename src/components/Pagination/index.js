@@ -1,4 +1,4 @@
-import { func } from 'prop-types';
+import { func, number } from 'prop-types';
 import styled from 'styled-components';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
@@ -19,12 +19,14 @@ export const NextButton = styled.button`
   background: none;
 `;
 
-const Pagination = ({ onPrevious, onNext }) => (
+const Pagination = ({
+  start, end, total, onPrevious, onNext,
+}) => (
   <Wrapper>
-    <PreviousButton onClick={onPrevious}>
+    <PreviousButton onClick={onPrevious} disabled={start === 0}>
       <NavigateBeforeIcon />
     </PreviousButton>
-    <NextButton onClick={onNext}>
+    <NextButton onClick={onNext} disabled={end >= total}>
       <NavigateNextIcon />
     </NextButton>
   </Wrapper>
@@ -33,6 +35,9 @@ const Pagination = ({ onPrevious, onNext }) => (
 Pagination.propTypes = {
   onPrevious: func.isRequired,
   onNext: func.isRequired,
+  start: number.isRequired,
+  end: number.isRequired,
+  total: number.isRequired,
 };
 
 export default Pagination;

@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { arrayOf, object } from 'prop-types';
+import { arrayOf, object, number } from 'prop-types';
 import { fetchContacts } from '../dao/Contacts';
 import {
   addContacts,
@@ -19,6 +19,7 @@ class List extends Component {
     super(props);
     addContacts(props.contacts, 0);
     this.state = {
+      total: props.total,
       offset: 0,
       query: '',
       column: null,
@@ -41,10 +42,11 @@ class List extends Component {
     if (order) {
       options[order] = column;
     }
-    const contacts = await fetchContacts(options);
-    addContacts(contacts, newOffset);
+    const { total, data } = await fetchContacts(options);
+    addContacts(data, newOffset);
     this.setState({
       offset: newOffset,
+      total,
     });
   }
 
@@ -52,11 +54,17 @@ class List extends Component {
 
   onNext = this.onTurn(offset => offset + PAGE_SIZE)
 
-  onQueryChange = (query) => {
+  onQueryChange = async (query) => {
     if (query === '') {
       clearContactIds();
+      const { total, data } = await fetchContacts({
+        limit: PAGE_SIZE,
+      });
+      addContacts(data, 0);
       this.setState({
         query,
+        offset: 0,
+        total,
       });
     } else {
       if (query !== this.state.query) {
@@ -64,37 +72,40 @@ class List extends Component {
       }
       this.setState({
         query,
+        offset: 0,
       });
       this.search(query);
     }
   }
 
   onSort = async ({ column, order }) => {
-    const contacts = await fetchContacts({
+    const { total, data } = await fetchContacts({
       limit: PAGE_SIZE,
       [order]: column,
     });
-    addContacts(contacts, 0);
+    addContacts(data, 0);
     this.setState({
       offset: 0,
       order,
       column,
+      total,
     });
   }
 
   search = async (query) => {
-    const contacts = await fetchContacts({
+    const { total, data } = await fetchContacts({
       limit: PAGE_SIZE,
       q: query,
     });
-    addContacts(contacts, 0);
+    addContacts(data, 0);
     this.setState({
       offset: 0,
+      total,
     });
   }
 
   render() {
-    const { offset, query } = this.state;
+    const { offset, query, total } = this.state;
     const contacts = getContacts();
     const slicedContacts = contacts
       .slice(offset, offset + PAGE_SIZE);
@@ -104,20 +115,27 @@ class List extends Component {
         <Search query={query} onQueryChange={this.onQueryChange} />
         <SortableHeader onSort={this.onSort} />
         <Contacts contacts={slicedContacts} />
-        <Pagination onPrevious={this.onPrevious} onNext={this.onNext} />
+        <Pagination
+          start={offset}
+          end={offset + slicedContacts.length}
+          total={total}
+          onPrevious={this.onPrevious}
+          onNext={this.onNext}
+        />
       </Layout>
     );
   }
 }
 
 List.getInitialProps = async () => {
-  const contacts = await fetchContacts({
+  const { total, data } = await fetchContacts({
     limit: PAGE_SIZE,
   });
-  return { contacts };
+  return { contacts: data, total };
 };
 
 List.propTypes = {
+  total: number.isRequired,
   contacts: arrayOf(object).isRequired,
 };
 

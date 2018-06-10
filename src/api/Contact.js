@@ -4,7 +4,7 @@ async function list(options) {
   const {
     limit, offset, q, asc, desc,
   } = options;
-  const sql = `
+  const baseSql = `
 SELECT l.UserID as id, l.Title as title, l.Name as name, l.BirthDate as birthDate, COUNT(*) AS count, l.IsFavorite as isFavorite
 FROM Contact as l
 LEFT JOIN ContactDetail as d ON d.UserID = l.UserID
@@ -12,15 +12,24 @@ ${q ? 'WHERE l.Name LIKE ?' : ''}
 GROUP BY l.UserID
 ${asc ? `ORDER BY ${escapeId(asc)} ASC` : ''}
 ${desc ? `ORDER BY ${escapeId(desc)} DESC` : ''}
-LIMIT ? OFFSET ?;
 `;
-
+  const totalSql = `
+SELECT COUNT(*) AS total FROM (${baseSql}) AS Total;
+`;
+  const sql = `
+${baseSql} LIMIT ? OFFSET ?;
+`;
   const params = [limit, offset];
   if (q) {
     params.unshift(`%${q}%`);
   }
 
-  return query(sql, params);
+  const [total, data] = await Promise.all([
+    query(totalSql, params),
+    query(sql, params),
+  ]);
+
+  return { total: total[0].total, data };
 }
 
 async function get(id) {
