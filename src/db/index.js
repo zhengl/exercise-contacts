@@ -23,4 +23,7 @@ const query = (sql, values) => new Promise((resolve, reject) => {
   });
 });
 
-module.exports = { query };
+module.exports = {
+  query,
+  escapeId: mysql.escapeId,
+};

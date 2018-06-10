@@ -1,6 +1,5 @@
-import Contacts, { Header } from '../';
+import Contacts from '../';
 import Contact from '../../Contact';
-import Pagination from '../../Pagination';
 
 describe('Contacts', () => {
   const contacts = [
@@ -21,34 +20,14 @@ describe('Contacts', () => {
       isFavorite: 1,
     },
   ];
-  let onPrevious;
-  let onNext;
   let wrapper;
 
   beforeEach(() => {
-    onPrevious = jest.fn();
-    onNext = jest.fn();
-    wrapper = shallow(<Contacts contacts={contacts} onPrevious={onPrevious} onNext={onNext} />);
-  });
-
-  it('should show header', () => {
-    expect(wrapper.find(Header).length).toBe(1);
+    wrapper = shallow(<Contacts contacts={contacts} />);
   });
 
   it('should show a list of contact', () => {
     expect(wrapper.find(Contact).length).toBe(contacts.length);
-  });
-
-  it('should show pagination', () => {
-    expect(wrapper.find(Pagination).length).toBe(1);
-  });
-
-  it('should pass onPrevious to Pagination', () => {
-    expect(wrapper.find(Pagination).props().onPrevious).toBe(onPrevious);
-  });
-
-  it('should pass onNext to Pagination', () => {
-    expect(wrapper.find(Pagination).props().onNext).toBe(onNext);
   });
 });
 

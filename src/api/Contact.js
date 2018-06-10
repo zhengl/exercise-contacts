@@ -1,13 +1,17 @@
-const { query } = require('../db');
+const { query, escapeId } = require('../db');
 
 async function list(options) {
-  const { limit, offset, q } = options;
+  const {
+    limit, offset, q, asc, desc,
+  } = options;
   const sql = `
 SELECT l.UserID as id, l.Title as title, l.Name as name, l.BirthDate as birthDate, COUNT(*) AS count, l.IsFavorite as isFavorite
 FROM Contact as l
 LEFT JOIN ContactDetail as d ON d.UserID = l.UserID
 ${q ? 'WHERE l.Name LIKE ?' : ''}
 GROUP BY l.UserID
+${asc ? `ORDER BY ${escapeId(asc)} ASC` : ''}
+${desc ? `ORDER BY ${escapeId(desc)} DESC` : ''}
 LIMIT ? OFFSET ?;
 `;
 

@@ -4,12 +4,16 @@ const router = express.Router();
 const Contact = require('./Contact');
 
 router.get('/contacts', async (req, res) => {
-  const { limit, offset, q } = req.query;
+  const {
+    limit, offset, q, asc, desc,
+  } = req.query;
 
   const contacts = await Contact.list({
     limit: parseInt(limit, 10) || 10,
     offset: parseInt(offset, 10) || 0,
     q,
+    asc,
+    desc,
   });
 
   res.json(contacts);
