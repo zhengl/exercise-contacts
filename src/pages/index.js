@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import { arrayOf, object, number } from 'prop-types';
+import debounce from 'lodash.debounce';
 import { fetchContacts } from '../dao/Contacts';
 import {
   addContacts,
@@ -92,7 +93,7 @@ class List extends Component {
     });
   }
 
-  search = async (query) => {
+  search = debounce(async (query) => {
     const { total, data } = await fetchContacts({
       limit: PAGE_SIZE,
       q: query,
@@ -102,7 +103,7 @@ class List extends Component {
       offset: 0,
       total,
     });
-  }
+  }, 300)
 
   render() {
     const { offset, query, total } = this.state;
