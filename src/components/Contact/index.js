@@ -1,17 +1,24 @@
 import styled from 'styled-components';
 import moment from 'moment';
+import Link from 'next/link';
 import StarIcon from '@material-ui/icons/Star';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import { string, number } from 'prop-types';
 
 export const Wrapper = styled.li`
   display: flex;
+`;
+
+const Anchor = styled.a`
+  display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 48px;
+  flex: 1;
   padding: 0 16px;
+  height: 48px;
   font-size: 16px;
   border-bottom: 1px solid rgb(224, 224, 224);
+  text-decoration: none;
 `;
 
 const Detail = styled.span`
@@ -43,22 +50,27 @@ export const StarBorder = styled(StarBorderIcon).attrs({
 `;
 
 const Contact = ({
-  name, title, birthDate, count, isFavorite,
+  id, name, title, birthDate, count, isFavorite,
 }) => (
   <Wrapper>
-    <Name>{ name }</Name>
-    <Title>{ title }</Title>
-    <Age>{ moment().diff(moment(birthDate), 'years') }</Age>
-    <Count>{ count }</Count>
-    {
-      isFavorite ?
-        <Star /> :
-        <StarBorder />
-    }
+    <Link href={{ pathname: '/details', query: { id } }}>
+      <Anchor href={`/details?id=${id}`}>
+        <Name>{ name }</Name>
+        <Title>{ title }</Title>
+        <Age>{ moment().diff(moment(birthDate), 'years') }</Age>
+        <Count>{ count }</Count>
+        {
+          isFavorite ?
+            <Star /> :
+            <StarBorder />
+        }
+      </Anchor>
+    </Link>
   </Wrapper>
 );
 
 Contact.propTypes = {
+  id: number.isRequired,
   name: string.isRequired,
   title: string.isRequired,
   birthDate: string.isRequired,
