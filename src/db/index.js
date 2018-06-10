@@ -1,10 +1,8 @@
 const mysql = require('mysql');
 
-const pool = mysql.createPool({
-  host: 'localhost',
-  user: 'root',
-  database: 'Expedia',
-});
+const DATABASE_URL = process.env.DATABASE_URL || 'mysql://root@localhost/expedia?multipleStatements=true';
+
+const pool = mysql.createPool(DATABASE_URL);
 
 const query = (sql, values) => new Promise((resolve, reject) => {
   pool.getConnection((connectionError, connection) => {

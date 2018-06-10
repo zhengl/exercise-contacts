@@ -1,10 +1,12 @@
 import url from 'url';
 import fetch from 'isomorphic-fetch';
 
+const isClient = typeof window !== 'undefined';
+
 const BASE_URL = {
-  protocol: 'http',
-  hostname: 'localhost',
-  port: 3000,
+  protocol: isClient ? (process.env.CLIENT_PROTOCOL || 'http') : 'http',
+  hostname: isClient ? (process.env.CLIENT_HOST || 'localhost') : 'localhost',
+  port: isClient ? process.env.CLIENT_PORT : (process.env.PORT || 3000),
 };
 
 export async function fetchContacts(options) {
