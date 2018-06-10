@@ -18,4 +18,9 @@ describe('The Home Page', () => {
     cy.get('[class^=Contact__Anchor]').first().click();
     cy.get('[class^=Email__Wrapper]').should('have.length', 5);
   });
+
+  it('should search username', () => {
+    cy.get('[class^=Search__Input]').type('User 1000');
+    cy.get('[class^=Contact__Wrapper]').should('have.length', 2);
+  });
 });

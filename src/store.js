@@ -1,5 +1,6 @@
 const STORE = {
   contacts: {},
+  filterIds: [],
 };
 
 export function addContacts(contacts) {
@@ -25,4 +26,23 @@ export function addDetails(id, details) {
 
 export function getDetails(id) {
   return STORE.contacts[id];
+}
+
+export function setFilteredContactIds(ids, offset) {
+  ids.forEach((id, index) => {
+    STORE.filterIds[offset + index] = id;
+  });
+}
+
+export function clearFilteredContactIds() {
+  STORE.filterIds = [];
+}
+
+export function getFilteredContacts() {
+  const result = {};
+  STORE.filterIds.forEach((id) => {
+    result[id] = STORE.contacts[id];
+  });
+
+  return result;
 }
