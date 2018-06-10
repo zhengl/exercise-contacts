@@ -4,39 +4,45 @@ import { fetchContacts } from '../dao/Contacts';
 import {
   addContacts,
   getContacts,
-  setFilteredContactIds,
-  clearFilteredContactIds,
-  getFilteredContacts,
+  clearContactIds,
 } from '../store';
 import Layout from '../components/Layout';
 import Search from '../components/Search';
+import SortableHeader from '../components/SortableHeader';
 import Contacts from '../components/Contacts';
+import Pagination from '../components/Pagination';
 
 const PAGE_SIZE = 10;
 
 class List extends Component {
   constructor(props) {
     super(props);
-    addContacts(props.contacts);
+    addContacts(props.contacts, 0);
     this.state = {
       offset: 0,
       query: '',
-      isSearching: false,
+      column: null,
+      order: null,
     };
   }
 
   onTurn = updateOffset => async () => {
-    const { offset, query, isSearching } = this.state;
+    const {
+      offset, query, column, order,
+    } = this.state;
     const newOffset = updateOffset(offset);
-    const contacts = await fetchContacts({
+    const options = {
       offset: newOffset,
       limit: PAGE_SIZE,
-      q: query,
-    });
-    addContacts(contacts);
-    if (isSearching) {
-      setFilteredContactIds(contacts.map(({ id }) => id), newOffset);
+    };
+    if (query) {
+      options.q = query;
     }
+    if (order) {
+      options[order] = column;
+    }
+    const contacts = await fetchContacts(options);
+    addContacts(contacts, newOffset);
     this.setState({
       offset: newOffset,
     });
@@ -48,21 +54,32 @@ class List extends Component {
 
   onQueryChange = (query) => {
     if (query === '') {
-      clearFilteredContactIds();
+      clearContactIds();
       this.setState({
         query,
-        isSearching: false,
       });
     } else {
       if (query !== this.state.query) {
-        clearFilteredContactIds();
+        clearContactIds();
       }
       this.setState({
         query,
-        isSearching: true,
       });
       this.search(query);
     }
+  }
+
+  onSort = async ({ column, order }) => {
+    const contacts = await fetchContacts({
+      limit: PAGE_SIZE,
+      [order]: column,
+    });
+    addContacts(contacts, 0);
+    this.setState({
+      offset: 0,
+      order,
+      column,
+    });
   }
 
   search = async (query) => {
@@ -70,24 +87,24 @@ class List extends Component {
       limit: PAGE_SIZE,
       q: query,
     });
-    addContacts(contacts);
-    setFilteredContactIds(contacts.map(({ id }) => id), 0);
+    addContacts(contacts, 0);
     this.setState({
       offset: 0,
     });
   }
 
   render() {
-    const { offset, query, isSearching } = this.state;
-    const contacts = isSearching ? getFilteredContacts() : getContacts();
-    const slicedContacts = Object.keys(contacts)
-      .slice(offset, offset + PAGE_SIZE)
-      .map(id => contacts[id]);
+    const { offset, query } = this.state;
+    const contacts = getContacts();
+    const slicedContacts = contacts
+      .slice(offset, offset + PAGE_SIZE);
 
     return (
       <Layout>
         <Search query={query} onQueryChange={this.onQueryChange} />
-        <Contacts contacts={slicedContacts} onPrevious={this.onPrevious} onNext={this.onNext} />
+        <SortableHeader onSort={this.onSort} />
+        <Contacts contacts={slicedContacts} />
+        <Pagination onPrevious={this.onPrevious} onNext={this.onNext} />
       </Layout>
     );
   }

@@ -4,6 +4,8 @@ import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
 const Wrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
   padding: 16px;
 `;
 

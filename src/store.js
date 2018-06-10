@@ -1,16 +1,23 @@
 const STORE = {
   contacts: {},
-  filterIds: [],
+  ids: [],
 };
 
-export function addContacts(contacts) {
-  contacts.forEach((contact) => {
-    STORE.contacts[contact.id] = contact;
+function setContactIds(ids, offset) {
+  ids.forEach((id, index) => {
+    STORE.ids[offset + index] = id;
   });
 }
 
+export function addContacts(contacts, offset) {
+  contacts.forEach((contact) => {
+    STORE.contacts[contact.id] = contact;
+  });
+  setContactIds(contacts.map(({ id }) => id), offset);
+}
+
 export function getContacts() {
-  return STORE.contacts;
+  return STORE.ids.map(id => STORE.contacts[id]);
 }
 
 export function addDetails(id, details) {
@@ -28,21 +35,6 @@ export function getDetails(id) {
   return STORE.contacts[id];
 }
 
-export function setFilteredContactIds(ids, offset) {
-  ids.forEach((id, index) => {
-    STORE.filterIds[offset + index] = id;
-  });
-}
-
-export function clearFilteredContactIds() {
-  STORE.filterIds = [];
-}
-
-export function getFilteredContacts() {
-  const result = {};
-  STORE.filterIds.forEach((id) => {
-    result[id] = STORE.contacts[id];
-  });
-
-  return result;
+export function clearContactIds() {
+  STORE.ids = [];
 }
