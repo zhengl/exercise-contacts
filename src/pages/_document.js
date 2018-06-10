@@ -19,6 +19,14 @@ export default class MyDocument extends Document {
           <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
           <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css" />
           {this.props.styleTags}
+          <style>{`
+            *,
+            *:before,
+            *:after {
+              box-sizing: border-box;
+            }
+          `}
+          </style>
         </Head>
         <body>
           <Main />
