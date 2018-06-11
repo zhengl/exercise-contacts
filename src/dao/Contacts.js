@@ -6,7 +6,7 @@ const isClient = typeof window !== 'undefined';
 const BASE_URL = {
   protocol: isClient ? (process.env.CLIENT_PROTOCOL || 'http') : 'http',
   hostname: isClient ? (process.env.CLIENT_HOST || 'localhost') : 'localhost',
-  port: isClient ? process.env.CLIENT_PORT : (process.env.PORT || 3000),
+  port: isClient ? (process.env.CLIENT_PORT || 3000) : (process.env.PORT || 3000),
 };
 
 export async function fetchContacts(options) {

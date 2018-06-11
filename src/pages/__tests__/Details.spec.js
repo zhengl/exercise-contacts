@@ -4,7 +4,7 @@ import Phone from '../../components/Phone';
 
 describe('Details', () => {
   const contact = {
-    id: 'test-id-1',
+    id: 1,
     name: 'test-name-1',
     title: 'test-title-1',
     birthDate: '1999-02-28T16:00:00.000Z',

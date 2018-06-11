@@ -12,6 +12,7 @@ import Search from '../components/Search';
 import SortableHeader from '../components/SortableHeader';
 import Contacts from '../components/Contacts';
 import Pagination from '../components/Pagination';
+import track from '../analytics';
 
 const PAGE_SIZE = 10;
 
@@ -26,6 +27,10 @@ class List extends Component {
       column: null,
       order: null,
     };
+  }
+
+  componentDidMount() {
+    track('list');
   }
 
   onTurn = updateOffset => async () => {
@@ -43,6 +48,7 @@ class List extends Component {
     if (order) {
       options[order] = column;
     }
+    track('page', options);
     const { total, data } = await fetchContacts(options);
     addContacts(data, newOffset);
     this.setState({
@@ -80,6 +86,7 @@ class List extends Component {
   }
 
   onSort = async ({ column, order }) => {
+    track('sort', { column, order });
     const { total, data } = await fetchContacts({
       limit: PAGE_SIZE,
       [order]: column,
@@ -94,6 +101,7 @@ class List extends Component {
   }
 
   search = debounce(async (query) => {
+    track('search', { query });
     const { total, data } = await fetchContacts({
       limit: PAGE_SIZE,
       q: query,
