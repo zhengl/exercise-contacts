@@ -5,7 +5,7 @@ describe('List', () => {
   let wrapper;
 
   beforeEach(() => {
-    wrapper = shallow(<List contacts={[]} />);
+    wrapper = shallow(<List contacts={[]} total={0} />);
   });
 
   it('should have contacts', () => {

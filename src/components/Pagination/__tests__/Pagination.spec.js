@@ -8,7 +8,13 @@ describe('Contacts', () => {
   beforeEach(() => {
     onPrevious = jest.fn();
     onNext = jest.fn();
-    wrapper = shallow(<Pagination onPrevious={onPrevious} onNext={onNext} />);
+    wrapper = shallow(<Pagination
+      start={0}
+      end={0}
+      total={0}
+      onPrevious={onPrevious}
+      onNext={onNext}
+    />);
   });
 
   it('should call onPrevious on clicking the previous button', () => {
