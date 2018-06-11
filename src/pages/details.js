@@ -1,3 +1,4 @@
+import { Component } from 'react';
 import styled from 'styled-components';
 import { string, number, shape, array } from 'prop-types';
 import StarIcon from '@material-ui/icons/Star';
@@ -7,6 +8,7 @@ import Email from '../components/Email';
 import Phone from '../components/Phone';
 import { fetchDetails } from '../dao/Contacts';
 import { addDetails, getDetails } from '../store';
+import track from '../analytics';
 
 const Header = styled.div`
   display: flex;
@@ -40,32 +42,44 @@ export const StarBorder = styled(StarBorderIcon).attrs({
 })`
 `;
 
-const Details = ({
-  name, title, isFavorite, types,
-}) => (
-  <Layout>
-    <Header>
-      <Name>{ `${title} ${name}` }</Name>
-      {
-        isFavorite ?
-          <Star /> :
-          <StarBorder />
-      }
-    </Header>
-    <Main>
-      <Contacts>
-        {
-          types.email &&
-            types.email.map((item, index) => <Email key={`${item}_${index}`} address={item} />) // eslint-disable-line react/no-array-index-key
-        }
-        {
-          types.phone &&
-            types.phone.map((item, index) => <Phone key={`${item}_${index}`} number={item} />) // eslint-disable-line react/no-array-index-key
-        }
-      </Contacts>
-    </Main>
-  </Layout>
-);
+class Details extends Component {
+  componentDidMount() {
+    track('details', {
+      id: this.props.id,
+    });
+  }
+
+  render() {
+    const {
+      name, title, isFavorite, types,
+    } = this.props;
+
+    return (
+      <Layout>
+        <Header>
+          <Name>{ `${title} ${name}` }</Name>
+          {
+            isFavorite ?
+              <Star /> :
+              <StarBorder />
+          }
+        </Header>
+        <Main>
+          <Contacts>
+            {
+              types.email &&
+                types.email.map((item, index) => <Email key={`${item}_${index}`} address={item} />) // eslint-disable-line react/no-array-index-key
+            }
+            {
+              types.phone &&
+                types.phone.map((item, index) => <Phone key={`${item}_${index}`} number={item} />) // eslint-disable-line react/no-array-index-key
+            }
+          </Contacts>
+        </Main>
+      </Layout>
+    );
+  }
+}
 
 Details.getInitialProps = async ({ query }) => {
   const { id } = query;
@@ -76,6 +90,7 @@ Details.getInitialProps = async ({ query }) => {
 };
 
 Details.propTypes = {
+  id: number.isRequired,
   name: string.isRequired,
   title: string.isRequired,
   types: shape({
