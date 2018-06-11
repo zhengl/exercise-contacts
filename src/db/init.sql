@@ -1,8 +1,7 @@
 -- Schema creation
-drop database if exists Expedia;
-create database Expedia;
-use Expedia;
-
+DROP TABLE IF EXISTS ContactDetail;
+DROP TABLE IF EXISTS Contact;
+DROP PROCEDURE IF EXISTS DataFilling;
 CREATE TABLE Contact (
     UserID INT PRIMARY KEY,
     Title NVARCHAR(5) NULL,
@@ -18,7 +17,6 @@ CREATE TABLE ContactDetail(
 );
 
 -- data generation - may take a while to fill the tables
-delimiter //
 CREATE PROCEDURE DataFilling()
 BEGIN
   -- create 10k users
@@ -50,9 +48,8 @@ BEGIN
         END WHILE;
     SET counter = counter + 1;
   END WHILE;
-END//
+END;
 
-delimiter ;
 CALL DataFilling();
 
 -- incremental scripts to improve performance

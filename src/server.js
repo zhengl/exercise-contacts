@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 
 const dev = process.env.NODE_ENV !== 'production';
 const next = require('next');
@@ -14,6 +15,8 @@ let httpServer;
 
 app.prepare().then(() => {
   const server = express();
+
+  server.use(cors());
 
   server.use('/api', apiRoutes);
 

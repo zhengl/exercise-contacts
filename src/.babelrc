@@ -11,6 +11,13 @@
     }
   },
   "plugins": [
+    ["transform-inline-environment-variables", {
+      "include": [
+        "CLIENT_PROTOCOL",
+        "CLIENT_HOST",
+        "CLIENT_PORT"
+      ]
+    }],
     ["styled-components", { "ssr": true, "displayName": true, "preprocess": false } ],
   ]
 }
